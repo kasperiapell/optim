@@ -12,7 +12,7 @@ double gradientDescent(
         double step;
         double estimate = init_val;
 
-        for (unsigned i = 0; i < iter_count, i++) {
+        for (unsigned i = 0; i < iter_count; i++) {
                 search_dir = objective_der(estimate);
                 step = -1 * alpha * search_dir;
                 estimate += step;
@@ -34,7 +34,7 @@ double newtonMethod(
         double step;
         double estimate = init_val;
 
-        for (unsigned i = 0; i < iter_count, i++) {
+        for (unsigned i = 0; i < iter_count; i++) {
                 search_dir = objective_der(estimate) / objective_second_der(estimate);
                 step = -1 * alpha * search_dir;
                 estimate += step;
