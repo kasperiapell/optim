@@ -24,21 +24,29 @@ MatrixXd gradientDescent(
         return estimate;
 }
 
-double newtonMethod(
-        double init_val, 
+MatrixXd newtonMethod(
+        MatrixXd init_val, 
         double alpha, 
         unsigned iter_count, 
-        double (*objective)(double), 
-        double (*objective_der)(double),
-        double (*objective_second_der)(double)
+        MatrixXd (*objective)(MatrixXd), 
+        MatrixXd (*objective_der)(MatrixXd),
+        MatrixXd (*objective_second_der)(MatrixXd)
 )
 {
-        double search_dir;
-        double step;
-        double estimate = init_val;
+        MatrixXd search_dir;
+        MatrixXd step;
+        MatrixXd estimate = init_val;
+        MatrixXd A;
 
         for (unsigned i = 0; i < iter_count; i++) {
-                search_dir = objective_der(estimate) / objective_second_der(estimate);
+                A = objective_second_der(estimate);
+                Eigen::FullPivLU<Eigen::MatrixXd> LU_decomp(A);
+                // Revert to gradient descent if Hessian not invertible
+                if (LU_decomp.isInvertible()) {
+                        search_dir = A * objective_der(estimate);
+                } else {
+                        search_dir = objective_der(estimate);
+                }
                 step = -1 * alpha * search_dir;
                 estimate += step;
         }
